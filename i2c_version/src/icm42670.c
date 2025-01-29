@@ -5,7 +5,7 @@
  * @brief     Implementation of ICM42670 6-axis IMU sensor driver interface.
  *            This module provides functions for reading accelerometer and
  *            gyroscope data from the ICM42670 sensor. The sensor communicates
- *            over SPI and uses the Zephyr sensor driver framework. The driver
+ *            over I2C and uses the Zephyr sensor driver framework. The driver
  *            supports configurable sample rates and can read acceleration and
  *            angular velocity data in all three axes.
  * 
@@ -204,13 +204,17 @@ int icm42670_read_gyro(struct icm42670_data *data)
  */
 int icm42670_set_accel_rate(uint16_t rate)
 {
-    struct sensor_value odr = {.val1 = rate, .val2 = 0};
+    struct sensor_value value;
+    value.val1 = rate;
+    value.val2 = 0;
+
     int ret = sensor_attr_set(icm42670_dev, SENSOR_CHAN_ACCEL_XYZ,
-                            SENSOR_ATTR_SAMPLING_FREQUENCY, &odr);
-    if (ret != 0) {
-        printk("Error: Failed to set accelerometer sampling rate: %d\n", ret);
+                            SENSOR_ATTR_SAMPLING_FREQUENCY, &value);
+    if (ret < 0) {
+        printk("Error: Failed to set accelerometer rate: %d\n", ret);
         return ret;
     }
+
     return 0;
 }
 
@@ -224,12 +228,16 @@ int icm42670_set_accel_rate(uint16_t rate)
  */
 int icm42670_set_gyro_rate(uint16_t rate)
 {
-    struct sensor_value odr = {.val1 = rate, .val2 = 0};
+    struct sensor_value value;
+    value.val1 = rate;
+    value.val2 = 0;
+
     int ret = sensor_attr_set(icm42670_dev, SENSOR_CHAN_GYRO_XYZ,
-                            SENSOR_ATTR_SAMPLING_FREQUENCY, &odr);
-    if (ret != 0) {
-        printk("Error: Failed to set gyroscope sampling rate: %d\n", ret);
+                            SENSOR_ATTR_SAMPLING_FREQUENCY, &value);
+    if (ret < 0) {
+        printk("Error: Failed to set gyroscope rate: %d\n", ret);
         return ret;
     }
+
     return 0;
 }

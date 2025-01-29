@@ -16,10 +16,6 @@
 
 #include "icm42670.h"
 #include <stdio.h>
-#include <zephyr/kernel.h>
-
-#define INIT_RETRY_DELAY_MS 1000  /* Delay between retry attempts in milliseconds */
-#define MAX_INIT_ATTEMPTS 10      /* Maximum number of initialization attempts */
 
 /** Static device pointer for the ICM42670 sensor */
 static const struct device *icm42670_dev;
@@ -28,16 +24,12 @@ static const struct device *icm42670_dev;
  * @brief Initialize the ICM42670 sensor driver
  * 
  * This function initializes the ICM42670 sensor driver by getting the device
- * binding and checking if the device is ready. It will keep retrying if the
- * device is not ready, with a delay between attempts.
+ * binding and checking if the device is ready.
  * 
  * @return int 0 on success, negative errno code on failure
  */
 int icm42670_init(void)
 {
-    int attempts = 0;
-    int ret = -ENODEV;
-
     /* Get device binding */
     icm42670_dev = DEVICE_DT_GET_ONE(invensense_icm42670);
 
@@ -46,20 +38,13 @@ int icm42670_init(void)
         return -ENODEV;
     }
 
-    while (attempts < MAX_INIT_ATTEMPTS) {
-        if (device_is_ready(icm42670_dev)) {
-            printk("ICM42670 initialized successfully after %d attempts\n", attempts + 1);
-            return 0;
-        }
-
-        printk("Device not ready, attempt %d of %d. Retrying in %d ms...\n", 
-               attempts + 1, MAX_INIT_ATTEMPTS, INIT_RETRY_DELAY_MS);
-        k_msleep(INIT_RETRY_DELAY_MS);
-        attempts++;
+    if (!device_is_ready(icm42670_dev)) {
+        printk("Error: Device not ready\n");
+        return -ENODEV;
     }
 
-    printk("Error: Device failed to initialize after %d attempts\n", MAX_INIT_ATTEMPTS);
-    return -ENODEV;
+    printk("ICM42670 initialized successfully\n");
+    return 0;
 }
 
 /**
