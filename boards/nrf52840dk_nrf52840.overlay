@@ -36,13 +36,15 @@
 	pinctrl-names = "default", "sleep";
 	clock-frequency = <100000>;
 
-	icm42670: icm42670@68 {
-		compatible = "invensense,icm42670";
+	imu0: icm42670@68 {
+		compatible = "invensense,icm42670p-i2c";
 		reg = <0x68>;
 		status = "okay";
-		accel-hz = <100>;
-		gyro-hz = <100>;
-		accel-fs = <16>;
-		gyro-fs = <2000>;
+		
+		/* Required properties */
+		accel-hz = <100>;    /* 100 Hz accelerometer ODR */
+		accel-fs = <16>;     /* ±16g accelerometer full-scale */
+		gyro-hz = <100>;     /* 100 Hz gyroscope ODR */
+		gyro-fs = <2000>;    /* ±2000 dps gyroscope full-scale */
 	};
 };

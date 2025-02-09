@@ -18,6 +18,10 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/sensor.h>
+#include <zephyr/devicetree.h>
+
+/* Device Tree node label for ICM42670 */
+/* Removed DT_DRV_COMPAT definition */
 
 /** Structure to hold sensor data */
 struct icm42670_data {

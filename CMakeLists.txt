@@ -12,6 +12,9 @@ set(BOARD nrf52840dk_nrf52840)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(icm42670_sample)
 
+# Add include directory for header files
+target_include_directories(app PRIVATE src)
+
 target_sources(app PRIVATE
     src/main.c
     src/icm42670.c

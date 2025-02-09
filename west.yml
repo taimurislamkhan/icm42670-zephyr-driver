@@ -1,0 +1,20 @@
+manifest:
+  remotes:
+    - name: zephyrproject
+      url-base: https://github.com/zephyrproject-rtos
+    - name: tdk
+      url-base: https://github.com/tdk-invensense
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject
+      revision: main
+      import: true
+    - name: hal_tdk
+      remote: tdk
+      repo-path: hal_tdk
+      revision: main
+      path: modules/hal/tdk
+
+  self:
+    path: app

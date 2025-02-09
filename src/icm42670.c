@@ -5,9 +5,7 @@
  * @brief     Implementation of ICM42670 6-axis IMU sensor driver interface.
  *            This module provides functions for reading accelerometer and
  *            gyroscope data from the ICM42670 sensor. The sensor communicates
- *            over SPI and uses the Zephyr sensor driver framework. The driver
- *            supports configurable sample rates and can read acceleration and
- *            angular velocity data in all three axes.
+ *            over I2C and uses the Zephyr sensor driver framework.
  * 
  * @version   0.1
  * @date      25-01-2025
@@ -36,10 +34,9 @@ static const struct device *icm42670_dev;
 int icm42670_init(void)
 {
     int attempts = 0;
-    int ret = -ENODEV;
 
-    /* Get device binding */
-    icm42670_dev = DEVICE_DT_GET_ONE(invensense_icm42670);
+    /* Get device binding using node label */
+    icm42670_dev = DEVICE_DT_GET(DT_NODELABEL(imu0));
 
     if (icm42670_dev == NULL) {
         printk("Error: Device not found in devicetree\n");
@@ -51,15 +48,14 @@ int icm42670_init(void)
             printk("ICM42670 initialized successfully after %d attempts\n", attempts + 1);
             return 0;
         }
-
-        printk("Device not ready, attempt %d of %d. Retrying in %d ms...\n", 
-               attempts + 1, MAX_INIT_ATTEMPTS, INIT_RETRY_DELAY_MS);
+        printk("Device not ready, retrying... (attempt %d/%d)\n", 
+               attempts + 1, MAX_INIT_ATTEMPTS);
         k_msleep(INIT_RETRY_DELAY_MS);
         attempts++;
     }
 
-    printk("Error: Device failed to initialize after %d attempts\n", MAX_INIT_ATTEMPTS);
-    return -ENODEV;
+    printk("Error: Failed to initialize ICM42670 after %d attempts\n", MAX_INIT_ATTEMPTS);
+    return -ETIMEDOUT;
 }
 
 /**

@@ -7,12 +7,12 @@ void main(void)
     struct icm42670_data sensor_data;
     int ret;
 
-    printk("Starting ICM42670 application\n");
+    printk("Starting ICM42670P application\n");
 
     /* Initialize the sensor */
     ret = icm42670_init();
     if (ret != 0) {
-        printk("Failed to initialize ICM42670\n");
+        printk("Failed to initialize ICM42670P\n");
         return;
     }
 
