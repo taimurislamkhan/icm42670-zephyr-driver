@@ -3,7 +3,7 @@ manifest:
     - name: zephyrproject
       url-base: https://github.com/zephyrproject-rtos
     - name: tdk
-      url-base: https://github.com/tdk-invensense
+      url-base: https://github.com/tdk-invn-oss
 
   projects:
     - name: zephyr
@@ -12,7 +12,7 @@ manifest:
       import: true
     - name: hal_tdk
       remote: tdk
-      repo-path: hal_tdk
+      repo-path: zephyr.hal_tdk
       revision: main
       path: modules/hal/tdk
 
